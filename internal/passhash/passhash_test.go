@@ -2,7 +2,7 @@ package passhash
 
 import "testing"
 
-//TestHashString is the test function of HashString
+//TestHashString is the test_plugin function of HashString
 func TestHashString(t *testing.T) {
 	var err error
 
