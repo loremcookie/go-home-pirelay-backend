@@ -8,10 +8,10 @@ import (
 )
 
 //SetRoutes sets up routes and middleware
-func SetRoutes() {
+func SetRoutes() *mux.Router {
 	//Create the router
 	r := mux.NewRouter()
-	//Register subrouter that requires admin
+	//Register sub router that requires admin
 	admin := r.PathPrefix("/api/admin/").Subrouter()
 
 	//Here goes the middleware to use.
@@ -28,6 +28,5 @@ func SetRoutes() {
 	r.HandleFunc("/api/login", controller.LoginPOST).Methods(http.MethodPost)     //Only accept POST
 	r.HandleFunc("/api/refresh", controller.RefreshPOST).Methods(http.MethodPost) //Only accept PORT
 
-	//Set http Handler to mux.Router
-	http.Handle("/", r)
+	return r
 }

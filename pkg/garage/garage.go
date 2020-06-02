@@ -7,14 +7,6 @@ package garage
 
 import "fmt"
 
-//GarageStatus is the type of states of the garage
-type GarageStatus uint
-
-const (
-	GarageStatusOpen    = iota //The status when garage is open
-	GarageStatusNotOpen        //The status when the garage is not open
-)
-
 //SendSignal sends a signal to the garage to open, close or hold depending on the current state
 func SendSignal() error {
 	//var err error
@@ -47,7 +39,7 @@ func SendSignal() error {
 }
 
 //GetStatus returns the current stus of the garage open or not open
-func GetStatus() (GarageStatus, error) {
+func GetStatus() (string, error) {
 	//var err error
 
 	////Open gpio memory range
@@ -71,9 +63,9 @@ func GetStatus() (GarageStatus, error) {
 	//case rpio.High:
 	//	return StateClosed, nil
 	//case rpio.Low:
-	//	return StateOpen, nil
+	//	return "open", nil
 	//}
 	//return "", nil
 
-	return GarageStatusNotOpen, nil
+	return "closed", nil
 }

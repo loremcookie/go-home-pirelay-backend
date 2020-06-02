@@ -11,7 +11,7 @@ import (
 func RefreshPOST(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	//Make map to store
+	//Make map to store request info
 	var reqMap map[string]string
 
 	//Get refresh token from request

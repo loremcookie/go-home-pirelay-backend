@@ -48,7 +48,7 @@ $RECYCLE.BIN/
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+# Test binary, built with `go test_plugin -c`
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
@@ -169,6 +169,9 @@ fabric.properties
 # Local History for Visual Studio Code
 .history/
 
-# Ignore API database
+#Ingore database directory
+db/
+
+# Ignore databases
 *.db
 *.db.lock
