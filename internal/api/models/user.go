@@ -1,6 +1,8 @@
 package models
 
 import (
+	"encoding/json"
+	"github.com/boltdb/bolt"
 	"github.com/loremcookie/go-home/backend/internal/database"
 	"github.com/loremcookie/go-home/backend/internal/passhash"
 )
@@ -8,9 +10,9 @@ import (
 //User is the user struct that defines a user.
 //The user struct is the user information in the database.
 type User struct {
-	Username string
-	Password string
-	Admin    bool
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Admin    bool   `json:"admin"`
 }
 
 //NewUser saves a user in database
@@ -54,12 +56,51 @@ func DeleteUser(username string) error {
 	return nil
 }
 
+//GetAllUser returns all user that are in the database
+func GetAllUser() []User {
+
+	//Get database object
+	db := database.GetDB()
+
+	//Create slice to store users in and return them
+	var users []User
+
+	//Access database
+	db.View(func(tx *bolt.Tx) error {
+		// Assume bucket exists and has keys
+		b := tx.Bucket([]byte("USER"))
+
+		//Range over all keys in the USER bucket
+		b.ForEach(func(_, userVal []byte) error {
+			var err error
+
+			//Create user model to decode to
+			var user User
+
+			//Decode json from user
+			err = json.Unmarshal(userVal, &user)
+
+			//Append user to users slice
+			users = append(users, user)
+
+			return err
+		})
+		return nil
+	})
+
+	//Return all user in the USER bucket
+	return users
+}
+
 //ValidUser returns a bool based of a user is valid
 func ValidUser(login *Login) bool {
 	var err error
 
-	//Checks if data is privet
-	if len(login.Username) == 0 && len(login.Password) == 0 {
+	//Validate function input
+	if login.Username == "" {
+		return false
+	}
+	if login.Password == "" {
 		return false
 	}
 
@@ -75,7 +116,7 @@ func ValidUser(login *Login) bool {
 	}
 
 	//Check if password matches password hash
-	if passhash.MatchString(login.Password, user.Password) {
+	if !passhash.MatchString(login.Password, user.Password) {
 		return false
 	}
 

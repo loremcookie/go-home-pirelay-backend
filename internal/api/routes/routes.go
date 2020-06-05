@@ -28,5 +28,10 @@ func SetRoutes() *mux.Router {
 	r.HandleFunc("/api/login", controller.LoginPOST).Methods(http.MethodPost)     //Only accept POST
 	r.HandleFunc("/api/refresh", controller.RefreshPOST).Methods(http.MethodPost) //Only accept PORT
 
+	//Register admin routes
+	admin.HandleFunc("/users/GetUser", controller.GetUserPOST).Methods(http.MethodPost)
+	admin.HandleFunc("/users/GetAll", controller.GetAllUserGET).Methods(http.MethodGet)
+	admin.HandleFunc("/users/NewUser", controller.CreateUserPOST).Methods(http.MethodPost)
+
 	return r
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
 	"github.com/loremcookie/go-home/backend/internal/api/models"
 	"github.com/loremcookie/go-home/backend/internal/api/routes"
@@ -19,13 +20,10 @@ func main() {
 
 	//TODO: Maybe use toml instead of env because of bad practice
 
-	//TODO: Remove line logging after development
-	//Enable line numbers in logging
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	//FIXME: Login will accept every password
 
 	//Load config file into environment variables to access in all parts of the program.
 	//The config can be accessed just like normal environment variables with os.Getenv("NAME_OF_VARIABLE")
-	//Why not use json or xml: I had too many issues with import cycles that unnecessarily delayed the development process.
 	err = godotenv.Load("./config/api/API_CONFIG.env")
 	//Exit and log error when loading of config fails
 	if err != nil {
@@ -49,7 +47,7 @@ func main() {
 	//Create default user for development
 	//TODO: Remove user after development
 	defaultUsername := os.Getenv("DEFAULT_USER_USERNAME")
-	defaultPassword, err := passhash.HashString(os.Getenv("DEFAULT_USER_PASSWORDf"))
+	defaultPassword, err := passhash.HashString(os.Getenv("DEFAULT_USER_PASSWORD"))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -72,5 +70,5 @@ func main() {
 	http.Handle("/", r)
 
 	//Start http server with config and log error
-	log.Fatal(http.ListenAndServe(os.Getenv("API_HOST")+":"+os.Getenv("API_PORT"), nil))
+	log.Fatal(http.ListenAndServe(os.Getenv("API_HOST")+":"+os.Getenv("API_PORT") /*Format port and host to listen on*/, handlers.RecoveryHandler() /*Set panic recovery*/ (handlers.LoggingHandler(os.Stdout, r)) /*Set logging handler*/))
 }
