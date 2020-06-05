@@ -18,10 +18,6 @@ import (
 func main() {
 	var err error
 
-	//TODO: Maybe use toml instead of env because of bad practice
-
-	//FIXME: Login will accept every password
-
 	//Load config file into environment variables to access in all parts of the program.
 	//The config can be accessed just like normal environment variables with os.Getenv("NAME_OF_VARIABLE")
 	err = godotenv.Load("./config/api/API_CONFIG.env")
