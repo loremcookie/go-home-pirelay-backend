@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/loremcookie/go-home/backend/internal/api/webutil"
 	"net/http"
 )
@@ -17,7 +16,7 @@ func RefreshPOST(w http.ResponseWriter, r *http.Request) {
 	//Get refresh token from request
 	err = webutil.ParseReq(r, &reqMap)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -27,7 +26,6 @@ func RefreshPOST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(reqMap["refresh_token"])
 	w.WriteHeader(http.StatusOK)
 	return
 }

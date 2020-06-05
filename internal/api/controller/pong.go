@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-//PongGET is a test_plugin route to check if the api is up.
+//PongGET is a route to check if the api is up.
 //If you send a request to this route then you get a pong.
 func PongGET(w http.ResponseWriter, r *http.Request) {
 	var err error

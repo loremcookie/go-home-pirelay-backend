@@ -24,7 +24,7 @@ func LoginPOST(w http.ResponseWriter, r *http.Request) {
 
 	//Verify user
 	if !models.ValidUser(&reqUser) {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
