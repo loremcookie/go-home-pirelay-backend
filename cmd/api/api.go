@@ -7,7 +7,6 @@ import (
 	"github.com/loremcookie/go-home/backend/internal/api/routes"
 	"github.com/loremcookie/go-home/backend/internal/database"
 	"github.com/loremcookie/go-home/backend/internal/passhash"
-	"github.com/loremcookie/go-home/backend/pkg/jsplugin"
 	"log"
 	"net/http"
 	"os"
@@ -17,10 +16,6 @@ import (
 
 func main() {
 	var err error
-
-	//TODO: Maybe use toml instead of env because of bad practice
-
-	//FIXME: Login will accept every password
 
 	//Load config file into environment variables to access in all parts of the program.
 	//The config can be accessed just like normal environment variables with os.Getenv("NAME_OF_VARIABLE")
@@ -59,12 +54,6 @@ func main() {
 
 	//Set up routes and middleware
 	r := routes.SetRoutes()
-
-	//Load and Run plugins
-	err = jsplugin.LoadPlugins("./plugin", r)
-	if err != nil {
-		log.Fatalln(err)
-	}
 
 	//Set http Handler to mux.Router
 	http.Handle("/", r)

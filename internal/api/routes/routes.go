@@ -19,7 +19,7 @@ func SetRoutes() *mux.Router {
 
 	//AuthenticationMiddleware is responsible for regular jwt authentication
 	r.Use(middleware.AuthenticationMiddleware)
-	//Admin middleware is responsible for making the admin subrouter only accessible for admin accounts
+	//Admin middleware is responsible for making the admin sub router only accessible for admin accounts
 	admin.Use(middleware.AdminMiddleware)
 
 	//Register functions here
@@ -27,6 +27,10 @@ func SetRoutes() *mux.Router {
 	r.HandleFunc("/api/ping", controller.PongGET).Methods(http.MethodGet)         //Only accept GET
 	r.HandleFunc("/api/login", controller.LoginPOST).Methods(http.MethodPost)     //Only accept POST
 	r.HandleFunc("/api/refresh", controller.RefreshPOST).Methods(http.MethodPost) //Only accept PORT
+
+	//Garage handlers
+	r.HandleFunc("/api/garage/SendSignal", controller.GarageSendSignalGET).Methods(http.MethodGet) //Only accept GET
+	r.HandleFunc("/api/garage/GetState", controller.GarageGetStatusWS)                             //Only accepts web socket connections
 
 	//Register admin routes
 	admin.HandleFunc("/users/GetUser", controller.GetUserPOST).Methods(http.MethodPost)

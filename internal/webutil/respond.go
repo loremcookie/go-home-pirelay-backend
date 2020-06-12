@@ -14,7 +14,7 @@ func Respond(w http.ResponseWriter, status int, resp interface{}) error {
 	//Make new buffer to write json to
 	var buf bytes.Buffer
 
-	//Decode json to buffer
+	//Encode json to buffer
 	err = json.NewEncoder(&buf).Encode(&resp)
 	if err != nil {
 		return err
