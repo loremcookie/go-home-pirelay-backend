@@ -7,7 +7,6 @@ import (
 	"github.com/loremcookie/go-home/backend/internal/api/routes"
 	"github.com/loremcookie/go-home/backend/internal/database"
 	"github.com/loremcookie/go-home/backend/internal/passhash"
-	"github.com/loremcookie/go-home/backend/pkg/jsplugin"
 	"log"
 	"net/http"
 	"os"
@@ -55,12 +54,6 @@ func main() {
 
 	//Set up routes and middleware
 	r := routes.SetRoutes()
-
-	//Load and Run plugins
-	err = jsplugin.LoadPlugins("./plugin", r)
-	if err != nil {
-		log.Fatalln(err)
-	}
 
 	//Set http Handler to mux.Router
 	http.Handle("/", r)

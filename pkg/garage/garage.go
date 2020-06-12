@@ -23,7 +23,7 @@ func SendSignal() error {
 	//	return err
 	//}
 
-	////Sleep 600 Milliseconds for garage to realise the relay has been opend
+	////Sleep 600 Milliseconds for garage to realise the relay has been opened
 	//time.Sleep(600 * time.Millisecond)
 
 	////Close relay again
@@ -38,7 +38,7 @@ func SendSignal() error {
 	return nil
 }
 
-//GetStatus returns the current stus of the garage open or not open
+//GetStatus returns the current status of the garage open or not open
 func GetStatus() (string, error) {
 	//var err error
 
