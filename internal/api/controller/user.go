@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/loremcookie/go-home/backend/internal/api/authentication"
 	"github.com/loremcookie/go-home/backend/internal/api/models"
 	"github.com/loremcookie/go-home/backend/internal/webutil"
 	"net/http"
@@ -57,6 +58,27 @@ func GetUserPOST(w http.ResponseWriter, r *http.Request) {
 	//Validate input
 	if reqMap["username"] == "" {
 		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	//Check if requested user matches the user from the token
+	//so you can requested your own user info but not other user
+	//information
+	//Get token from header
+	token, err := authentication.GetTokenFromHeader(r)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	//Get token metadata
+	tokenMetadata := authentication.GetTokenMetadata(token)
+	if tokenMetadata == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	//Check if requested username matches token username if user is not admin
+	if tokenMetadata.Admin == false && tokenMetadata.Username != reqMap["username"] {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
