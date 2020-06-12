@@ -19,6 +19,13 @@ func AdminMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		//Extract metadata from token
+		tokenMetadata := authentication.GetTokenMetadata(token)
+		if tokenMetadata == nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
 		//Get list of routes to exclude from admin privileges
 		excludeRoutes := listutill.ParseList(os.Getenv("ADMIN_EXCLUDE_ROUTES"))
 		//Get request path
@@ -39,13 +46,6 @@ func AdminMiddleware(next http.Handler) http.Handler {
 				next.ServeHTTP(w, r)
 				return
 			}
-		}
-
-		//Extract metadata from token
-		tokenMetadata := authentication.GetTokenMetadata(token)
-		if tokenMetadata == nil {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
 		}
 
 		//If admin isn't true return unauthorized status code
