@@ -1,13 +1,12 @@
 [Unit]
 Description=Api for go-home home automation
-#TODO: Add right binary directory
-ConditionPathExists=/home/go-home/go-home/bin/api
+ConditionPathExists=/home/go-home-pirelay-backend/go-home-pirelay-backend/bin/api
 After=network.target
 
 [Service]
 Type=simple
-User=go-sleep
-Group=go-sleep
+User=go-home-pirelay-backend
+Group=gpio
 LimitNOFILE=infinity
 
 # set restart options
@@ -15,18 +14,21 @@ Restart=on-failure
 RestartSec=10
 startLimitIntervalSec=60
 
+# Load config enviroment file
+EnvironmentFile=/etc/go-home-pirelay-backend/api/API_CONFIG.env
+
 # set working directory and start api
-WorkingDirectory=/home/user/go-home/
-ExecStart=/home/go-sleep/go-home/bin/api
+WorkingDirectory=/home/user/go-home-pirelay-backend/
+ExecStart=/home/go-home-pirelay-backend/go-home-pirelay-backend/bin/api -daemon
 
 # make sure log directory exists and owned by syslog
 PermissionsStartOnly=true
-ExecStartPre=/bin/mkdir -p /var/log/sleepservice
-ExecStartPre=/bin/chown syslog:adm /var/log/sleepservice
-ExecStartPre=/bin/chmod 755 /var/log/sleepservice
+ExecStartPre=/bin/mkdir -p /var/log/go-home-pirelay-backend
+ExecStartPre=/bin/chown syslog:adm /var/log/go-home-pirelay-backend
+ExecStartPre=/bin/chmod 755 /var/log/go-home-pirelay-backend
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=sleepservice
+SyslogIdentifier=go-home-pirelay-backend
 
 [Install]
 WantedBy=multi-user.target

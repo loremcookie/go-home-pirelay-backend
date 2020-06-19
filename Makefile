@@ -1,8 +1,5 @@
-build-rspi:
-	./scripts/build/build_rspi.sh
+build:
+	bash ./scripts/build.sh
 
 lint:
-	./scripts/shared/lint_go.sh
-
-todo:
-	./scripts/shared/get_todo.sh
+	bash ./scripts/lint.sh

@@ -175,3 +175,6 @@ db/
 # Ignore databases
 *.db
 *.db.lock
+
+# Exclude test scripts and testing data
+test/

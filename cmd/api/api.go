@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
 	"github.com/loremcookie/go-home/backend/internal/api/models"
@@ -17,12 +18,18 @@ import (
 func main() {
 	var err error
 
-	//Load config file into environment variables to access in all parts of the program.
-	//The config can be accessed just like normal environment variables with os.Getenv("NAME_OF_VARIABLE")
-	err = godotenv.Load("./config/api/API_CONFIG.env")
-	//Exit and log error when loading of config fails
-	if err != nil {
-		log.Fatalln(err)
+	//The daemon flag defines is this program runs as a standalone program or as an init daemon.
+	//is this file run as a standalone program than the flag must not be set.
+	isDaemon := flag.Bool("daemon", false, "The daemon flag defines if this program is run as a standalone or as an init daemon.")
+
+	if !*isDaemon {
+		//Load config file into environment variables to access in all parts of the program.
+		//The config can be accessed just like normal environment variables with os.Getenv("NAME_OF_VARIABLE")
+		err = godotenv.Load("./config/api/API_CONFIG.env")
+		//Exit and log error when loading of config fails
+		if err != nil {
+			log.Fatalln(err)
+		}
 	}
 
 	//Convert string returned by os.Getenv() to int for generation of time.Duration
