@@ -97,6 +97,40 @@ func GetUserPOST(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	//Return 200 status code when all has gone successfully
+	w.WriteHeader(http.StatusOK)
+}
+
+//DeleteUserPOST deletes a user by the username
+func DeleteUserPOST(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	//Make map to parse request into
+	var reqMap map[string]interface{}
+
+	//Parse request json into map
+	err = webutil.ParseReq(r, reqMap)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	//Validate input
+	if reqMap["username"] == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	//Delete user
+	err = models.DeleteUser(reqMap["username"].(string))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	//Return 200 status code when all has gone successfully
+	w.WriteHeader(http.StatusOK)
 }
 
 //GetAllUserGET retrieves all user registers in the USER bucket
@@ -113,4 +147,7 @@ func GetAllUserGET(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
+	//Return 200 status code when all has gone successfully
+	w.WriteHeader(http.StatusOK)
 }
