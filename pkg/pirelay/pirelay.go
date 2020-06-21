@@ -1,12 +1,7 @@
-/*
-TODO: Uncomment actual logic after development
-This package is the core relay logic to operate with the pirelay relay shield for raspberry pi.
-The relay logic is in a separate package to make it easier to change relay board.
-*/
-
 package pirelay
 
 import (
+	"github.com/stianeikeland/go-rpio"
 	"os"
 	"strconv"
 )
@@ -37,25 +32,25 @@ func GetPinByRelay(relay int) (int, error) {
 //OpenRelay Opens the specified relay
 //Doesnt work when relay is already open
 func OpenRelay(relay int) error {
-	//var err error
+	var err error
 
-	////Open gpio memory range
-	//err = rpio.Open()
-	//if err != nil {
-	//	return err
-	//}
-	//defer rpio.Close() //Close gpio memory range when function ends
+	//Open gpio memory range
+	err = rpio.Open()
+	if err != nil {
+		return err
+	}
+	defer rpio.Close() //Close gpio memory range when function ends
 
-	////Get Pin by relay
-	//relayPin, err := GetPinByRelay(relay)
-	//if err != nil {
-	//	return err
-	//}
+	//Get Pin by relay
+	relayPin, err := GetPinByRelay(relay)
+	if err != nil {
+		return err
+	}
 
-	////Output to the relay pin to open the relay up
-	//pin := rpio.Pin(relayPin)
-	//pin.Mode(rpio.Output)
-	//pin.Write(rpio.High)
+	//Output to the relay pin to open the relay up
+	pin := rpio.Pin(relayPin)
+	pin.Mode(rpio.Output)
+	pin.Write(rpio.High)
 
 	return nil
 }
@@ -63,24 +58,24 @@ func OpenRelay(relay int) error {
 //CloseRelay Closed the specified relay
 //Doesnt Work when relay is already closed
 func CloseRelay(relay int) error {
-	//var err error
+	var err error
 
-	////Open gpio memory range
-	//err = rpio.Open()
-	//if err != nil {
-	//	return err
-	//}
-	//defer rpio.Close() //Close gpio memory range when function ends
+	//Open gpio memory range
+	err = rpio.Open()
+	if err != nil {
+		return err
+	}
+	defer rpio.Close() //Close gpio memory range when function ends
 
-	////Get Pin by relay
-	//relayPin, err := GetPinByRelay(relay)
-	//if err != nil {
-	//	return err
-	//}
+	//Get Pin by relay
+	relayPin, err := GetPinByRelay(relay)
+	if err != nil {
+		return err
+	}
 
-	////Stop Output to pin to close relay
-	//pin := rpio.Pin(relayPin)
-	//pin.Write(rpio.Low)
+	//Stop Output to pin to close relay
+	pin := rpio.Pin(relayPin)
+	pin.Write(rpio.Low)
 
 	return nil
 }
