@@ -123,11 +123,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 Your Name - [@loremcookie](https://twitter.com/loremcookie) - lorem.cookie@gmail.com
 
 Project Link: [https://github.com/loremcookie/go-home-pirelay-backend](https://github.com/loremcookie/go-home-pirelay-backend)
-
-
-
-## Acknowledgements
-
-* []()
-* []()
-* []()
