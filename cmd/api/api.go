@@ -46,8 +46,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	//Create default user for development
-	//TODO: Remove user after development
+	//Create default user
 	defaultUsername := os.Getenv("DEFAULT_USER_USERNAME")
 	defaultPassword, err := passhash.HashString(os.Getenv("DEFAULT_USER_PASSWORD"))
 	if err != nil {
