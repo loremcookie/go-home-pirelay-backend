@@ -48,7 +48,7 @@ For general information about the project read the README.md file of the parent 
 
 * [Golang](golang.org)
 * [Gorilla Toolkit](www.gorillatoolkit.org/)
-* [go-rpio](jgithub.com/stianeikeland/go-rpio)
+* [go-rpio](github.com/stianeikeland/go-rpio)
 
 
 
