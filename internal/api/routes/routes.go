@@ -33,10 +33,10 @@ func SetRoutes() *mux.Router {
 	r.HandleFunc("/api/garage/GetState", controller.GarageGetStatusWS)                             //Only accepts web socket connections
 
 	//Register admin routes
-	admin.HandleFunc("/users/GetUser", controller.GetUserPOST).Methods(http.MethodPost)       //Only accept POST request
-	admin.HandleFunc("/users/GetAll", controller.GetAllUserGET).Methods(http.MethodGet)       //Only accept GET request
-	admin.HandleFunc("/users/NewUser", controller.CreateUserPOST).Methods(http.MethodPost)    //Only accept POST request
-	admin.HandleFunc("/users/DeleteUser", controller.DeleteUserPOST).Methods(http.MethodPost) //Only accept POST request
+	admin.HandleFunc("/users/GetUser", controller.GetUserGET).Methods(http.MethodGet)       //Only accept GET request
+	admin.HandleFunc("/users/GetAll", controller.GetAllUserGET).Methods(http.MethodGet)     //Only accept GET request
+	admin.HandleFunc("/users/NewUser", controller.CreateUserPOST).Methods(http.MethodPost)  //Only accept POST request
+	admin.HandleFunc("/users/DeleteUser", controller.DeleteUserGET).Methods(http.MethodGet) //Only accept POST request
 
 	return r
 }

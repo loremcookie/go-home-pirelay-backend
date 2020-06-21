@@ -41,22 +41,21 @@ func CreateUserPOST(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-//GetUserPOST gets a user info based os the username
-func GetUserPOST(w http.ResponseWriter, r *http.Request) {
+//GetUserGET gets a user info based os the username
+func GetUserGET(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	//Make map to decode request body to
-	var reqMap map[string]interface{}
+	//Parse GET queries
+	queries := r.URL.Query()
 
-	//Decode json to map
-	err = webutil.ParseReq(r, &reqMap)
-	if err != nil {
+	//Validate input
+	//Check if only one value is in username query
+	if len(queries["username"]) > 1 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	//Validate input
-	if reqMap["username"] == "" {
+	//Make sue that username is not empty
+	if queries["username"][0] == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -77,13 +76,13 @@ func GetUserPOST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//Check if requested username matches token username if user is not admin
-	if tokenMetadata.Admin == false && tokenMetadata.Username != reqMap["username"] {
+	if tokenMetadata.Admin == false && tokenMetadata.Username != queries["username"][0] {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
 	//Get user by username
-	user, err := models.GetUser(reqMap["username"].(string))
+	user, err := models.GetUser(queries["username"][0])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -102,28 +101,27 @@ func GetUserPOST(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-//DeleteUserPOST deletes a user by the username
-func DeleteUserPOST(w http.ResponseWriter, r *http.Request) {
+//DeleteUserGET deletes a user by the username
+func DeleteUserGET(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	//Make map to parse request into
-	var reqMap map[string]interface{}
+	//Parse GET queries
+	queries := r.URL.Query()
 
-	//Parse request json into map
-	err = webutil.ParseReq(r, reqMap)
-	if err != nil {
+	//Validate input
+	//Check if only one value is in username query
+	if len(queries["username"]) > 1 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	//Validate input
-	if reqMap["username"] == "" {
+	//Make sue that username is not empty
+	if queries["username"][0] == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	//Delete user
-	err = models.DeleteUser(reqMap["username"].(string))
+	err = models.DeleteUser(queries["username"][0])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -134,7 +132,7 @@ func DeleteUserPOST(w http.ResponseWriter, r *http.Request) {
 }
 
 //GetAllUserGET retrieves all user registers in the USER bucket
-func GetAllUserGET(w http.ResponseWriter, r *http.Request) {
+func GetAllUserGET(w http.ResponseWriter, _ *http.Request) {
 	var err error
 
 	//Get all users as slice
