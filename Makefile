@@ -1,5 +1,5 @@
 build:
-	./scripts/build.sh
+	bash ./scripts/build.sh
 
 lint:
-	./scripts/lint.sh
+	bash ./scripts/lint.sh
