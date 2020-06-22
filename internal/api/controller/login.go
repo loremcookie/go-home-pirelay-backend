@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"github.com/loremcookie/go-home/backend/internal/api/authentication"
-	"github.com/loremcookie/go-home/backend/internal/api/models"
-	"github.com/loremcookie/go-home/backend/internal/webutil"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/api/authentication"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/api/models"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/webutil"
 	"net/http"
 )
 

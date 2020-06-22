@@ -3,8 +3,8 @@ package controller
 import (
 	"fmt"
 	"github.com/gorilla/websocket"
-	"github.com/loremcookie/go-home/backend/internal/wsutil"
-	"github.com/loremcookie/go-home/backend/pkg/garage"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/wsutil"
+	"github.com/loremcookie/go-home-pirelay-backend/pkg/garage"
 	"net/http"
 	"time"
 )
