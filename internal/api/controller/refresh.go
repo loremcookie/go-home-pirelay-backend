@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/loremcookie/go-home/backend/internal/webutil"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/webutil"
 	"net/http"
 )
 

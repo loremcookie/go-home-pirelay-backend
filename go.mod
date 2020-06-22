@@ -1,4 +1,4 @@
-module github.com/loremcookie/go-home/backend
+module github.com/loremcookie/go-home-pirelay-backend
 
 go 1.14
 

@@ -3,7 +3,7 @@ package authentication
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/loremcookie/go-home/backend/internal/api/models"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/api/models"
 	"net/http"
 	"os"
 	"strings"

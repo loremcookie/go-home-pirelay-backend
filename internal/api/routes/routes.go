@@ -2,8 +2,8 @@ package routes
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/loremcookie/go-home/backend/internal/api/controller"
-	"github.com/loremcookie/go-home/backend/internal/api/middleware"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/api/controller"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/api/middleware"
 	"net/http"
 )
 

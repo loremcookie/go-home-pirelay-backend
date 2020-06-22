@@ -3,8 +3,8 @@ package models
 import (
 	"encoding/json"
 	"github.com/boltdb/bolt"
-	"github.com/loremcookie/go-home/backend/internal/database"
-	"github.com/loremcookie/go-home/backend/internal/passhash"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/database"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/passhash"
 )
 
 //User is the user struct that defines a user.

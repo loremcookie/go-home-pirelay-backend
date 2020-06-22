@@ -1,8 +1,8 @@
 package garage
 
 import (
-	"github.com/loremcookie/go-home/backend/pkg/gpio"
-	"github.com/loremcookie/go-home/backend/pkg/pirelay"
+	"github.com/loremcookie/go-home-pirelay-backend/pkg/gpio"
+	"github.com/loremcookie/go-home-pirelay-backend/pkg/pirelay"
 	"os"
 	"strconv"
 	"time"

@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"github.com/loremcookie/go-home/backend/internal/api/authentication"
-	"github.com/loremcookie/go-home/backend/internal/listutill"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/api/authentication"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/listutill"
 	"net/http"
 	"os"
 )
