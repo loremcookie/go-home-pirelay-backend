@@ -8,4 +8,4 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Run api binary
-sudo ./cmd/bin/api
+sudo ./bin/api
