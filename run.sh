@@ -8,7 +8,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Check if db folder exists
-if [[ -d "./db" ]]: then
+if [ ! -d "./db" ]; then
   # When db folder does not exist create it
   mkdir ./db
 fi
