@@ -37,7 +37,7 @@ func Configure(database *Database) error {
 	return nil
 }
 
-// Update stores structure in key.
+//Update stores structure in key.
 //Takes the bucket name a key and the struct to store.
 func Update(bucketName string, key string, dataStruct interface{}) error {
 	err := boltDB.Update(func(tx *bolt.Tx) error {
@@ -62,7 +62,7 @@ func Update(bucketName string, key string, dataStruct interface{}) error {
 	return err
 }
 
-// View gets structure from key.
+//View gets structure from key.
 //Takes bucket name, key and datastruct to store data in.
 func View(bucketName string, key string, dataStruct interface{}) error {
 	err := boltDB.View(func(tx *bolt.Tx) error {
@@ -90,7 +90,7 @@ func View(bucketName string, key string, dataStruct interface{}) error {
 	return err
 }
 
-// Delete deletes key and key data.
+//Delete deletes key and key data.
 //Takes bucket name and key to delete the given key.
 func Delete(bucketName string, key string) error {
 	err := boltDB.Update(func(tx *bolt.Tx) error {
@@ -105,7 +105,35 @@ func Delete(bucketName string, key string) error {
 	return err
 }
 
-//Get db struct for custome database operations
+//GetAll returns a slice of maps of all keys and values of a bucket
+func GetAll(bucket string) ([]map[string]interface{}, error) {
+	//Make map slice to append key value pairs to
+	var keyValList []map[string]interface{}
+
+	err := boltDB.View(func(tx *bolt.Tx) error {
+		// Assume bucket exists and has keys
+		b := tx.Bucket([]byte(bucket))
+
+		//Range over all keys in the USER bucket
+		err := b.ForEach(func(k, v []byte) error {
+			keyValList = append(keyValList, map[string]interface{}{
+				"key": string(k),
+				"val": string(v),
+			})
+
+			return nil
+		})
+		return err
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	//Return slice of key value pairs of the bucket
+	return keyValList, nil
+}
+
+//Get db struct for custom database operations
 func GetDB() *bolt.DB {
 	return boltDB
 }

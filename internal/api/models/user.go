@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"github.com/boltdb/bolt"
 	"github.com/loremcookie/go-home-pirelay-backend/internal/database"
 	"github.com/loremcookie/go-home-pirelay-backend/internal/passhash"
 )
@@ -57,39 +56,40 @@ func DeleteUser(username string) error {
 }
 
 //GetAllUser returns all user that are in the database
-func GetAllUser() []User {
+func GetAllUser() ([]User, error) {
+	var err error
 
-	//Get database object
-	db := database.GetDB()
+	//Get all keys and values of the USER bucket
+	keyValues, err := database.GetAll("USER")
+	if err != nil {
+		return nil, err
+	}
 
-	//Create slice to store users in and return them
+	//Create a slice of users to store users in
 	var users []User
 
-	//Access database
-	db.View(func(tx *bolt.Tx) error {
-		// Assume bucket exists and has keys
-		b := tx.Bucket([]byte("USER"))
+	//Iterate over the keys and values of the bucket
+	for _, val := range keyValues {
 
-		//Range over all keys in the USER bucket
-		b.ForEach(func(_, userVal []byte) error {
-			var err error
-
-			//Create user model to decode to
+		//Iterate over the keys and values of the key an value pair's of the bucket
+		for _, value := range val {
+			//Create user to decode json to
 			var user User
 
-			//Decode json from user
-			err = json.Unmarshal(userVal, &user)
+			//Decode the values from json to user
+			err := json.Unmarshal(value.([]byte), &user)
+			if err != nil {
+				return nil, err
+			}
 
-			//Append user to users slice
+			//Append user to list of users
 			users = append(users, user)
 
-			return err
-		})
-		return nil
-	})
+		}
+	}
 
 	//Return all user in the USER bucket
-	return users
+	return users, nil
 }
 
 //ValidUser returns a bool based of a user is valid
