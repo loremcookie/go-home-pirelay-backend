@@ -6,5 +6,5 @@ if [ ! -d "./bin" ]; then
 fi
 
 export CGO_ENABLED=0 && export GOOS=linux && export GOARCH=arm && export GOARM=5
-
-go build ./cmd/api/api.go && mv ./cmd/api/api ./bin/.
+go build ./cmd/api/api.go
+mv ./api ./bin/.
