@@ -4,8 +4,8 @@ package models
 //Its contains the information used to login is more info is added to log in
 //you need to add it here.
 type Login struct {
-	Username string
-	Password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 //TokenClaims are the private claims stored in the token.
