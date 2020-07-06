@@ -136,7 +136,10 @@ func GetAllUserGET(w http.ResponseWriter, _ *http.Request) {
 	var err error
 
 	//Get all users as slice
-	users := models.GetAllUser()
+	users, err := models.GetAllUser()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 
 	//Respond to request with users
 	err = webutil.Respond(w, 200, map[string]interface{}{
