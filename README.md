@@ -40,6 +40,8 @@
 
 ## About The Project
 
+This Project is unfinished.
+
 This is the backend of the pirelay-go-home project. It is accessible through a RESTful API, the routes are listed under usage.
 
 For general information about the project read the README.md file of the parent folder of the project.
