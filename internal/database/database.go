@@ -1,5 +1,5 @@
 /*
-This is a slightly changed version of the database.go file of th gowebapp boilerplate https://github.com/josephspurrier/gowebapp
+This is a slightly changed version of the database.go file of th gowebapp boilerplate github.com/josephspurrier/gowebapp
 */
 
 package database
@@ -10,10 +10,7 @@ import (
 	"time"
 )
 
-var (
-	boltDB       *bolt.DB  //Store boltDB object
-	databaseInfo *Database //Store database info
-)
+var db *bolt.DB //Store BoltDB object
 
 //Database type holds information about the boltDB connection like Path to File and Timeout of the boltDB connection.
 type Database struct {
@@ -27,10 +24,9 @@ type Database struct {
 //Returns error when unable to connect to given boltDB file.
 func Configure(database *Database) error {
 	var err error
-	//Store database info
-	databaseInfo = database
+
 	//Open connection
-	boltDB, err = bolt.Open(database.Path, 0600, &bolt.Options{Timeout: database.Timeout})
+	db, err = bolt.Open(database.Path, 0600, &bolt.Options{Timeout: database.Timeout})
 	if err != nil {
 		return err
 	}
@@ -40,7 +36,7 @@ func Configure(database *Database) error {
 //Update stores structure in key.
 //Takes the bucket name a key and the struct to store.
 func Update(bucketName string, key string, dataStruct interface{}) error {
-	err := boltDB.Update(func(tx *bolt.Tx) error {
+	err := db.Update(func(tx *bolt.Tx) error {
 		// Create the bucket
 		bucket, e := tx.CreateBucketIfNotExists([]byte(bucketName))
 		if e != nil {
@@ -63,9 +59,9 @@ func Update(bucketName string, key string, dataStruct interface{}) error {
 }
 
 //View gets structure from key.
-//Takes bucket name, key and datastruct to store data in.
+//Takes bucket name, key and dataStruct to store data in.
 func View(bucketName string, key string, dataStruct interface{}) error {
-	err := boltDB.View(func(tx *bolt.Tx) error {
+	err := db.View(func(tx *bolt.Tx) error {
 		// Get the bucket
 		b := tx.Bucket([]byte(bucketName))
 		if b == nil {
@@ -93,7 +89,7 @@ func View(bucketName string, key string, dataStruct interface{}) error {
 //Delete deletes key and key data.
 //Takes bucket name and key to delete the given key.
 func Delete(bucketName string, key string) error {
-	err := boltDB.Update(func(tx *bolt.Tx) error {
+	err := db.Update(func(tx *bolt.Tx) error {
 		// Get the bucket
 		b := tx.Bucket([]byte(bucketName))
 		if b == nil {
@@ -110,12 +106,12 @@ func GetAll(bucket string) ([]map[string]interface{}, error) {
 	//Make map slice to append key value pairs to
 	var keyValList []map[string]interface{}
 
-	err := boltDB.View(func(tx *bolt.Tx) error {
-		// Assume bucket exists and has keys
+	err := db.View(func(tx *bolt.Tx) error {
+		//Assume bucket exists and has keys
 		b := tx.Bucket([]byte(bucket))
 
 		//Range over all keys in the USER bucket
-		err := b.ForEach(func(k, v []byte) error {
+		return b.ForEach(func(k, v []byte) error {
 			keyValList = append(keyValList, map[string]interface{}{
 				"key": string(k),
 				"val": string(v),
@@ -123,7 +119,6 @@ func GetAll(bucket string) ([]map[string]interface{}, error) {
 
 			return nil
 		})
-		return err
 	})
 	if err != nil {
 		return nil, err
@@ -133,12 +128,64 @@ func GetAll(bucket string) ([]map[string]interface{}, error) {
 	return keyValList, nil
 }
 
-//Get db struct for custom database operations
-func GetDB() *bolt.DB {
-	return boltDB
+//GetAllBuckets returns all top level buckets in a string slice
+func GetAllBuckets() ([]string, error) {
+	//Make slice to store buckets in
+	var buckets []string
+
+	err := db.View(func(tx *bolt.Tx) error {
+		//Loop through top level bucket
+		return tx.ForEach(func(bucket []byte, _ *bolt.Bucket) error {
+			//Append buckets to bucket list
+			buckets = append(buckets, string(bucket))
+			return nil
+		})
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return buckets, nil
 }
 
-//Get info on the current database
-func ReadInfo() Database {
-	return *databaseInfo
+//Reset resets the database to be empty.
+//WARNING: This function deletes all data stored in the database
+func Reset() error {
+	var err error
+
+	//Call Get All Bucket function to get all buckets in the top level bucket
+	buckets, err := GetAllBuckets()
+	if err != nil {
+		return err
+	}
+
+	err = db.View(func(tx *bolt.Tx) error {
+		//Loop through list of buckets to delete them
+		for _, bucket := range buckets {
+			//Delete bucket
+			e := tx.DeleteBucket([]byte(bucket))
+			if err != nil {
+				return e
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//Close releases all database resources. All transactions must be closed before closing the database.
+func Close() error {
+	var err error
+
+	//Close database connection
+	err = db.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
