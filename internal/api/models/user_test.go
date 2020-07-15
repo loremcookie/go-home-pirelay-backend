@@ -3,7 +3,9 @@ package models
 import (
 	"fmt"
 	"github.com/boltdb/bolt"
+	"github.com/joho/godotenv"
 	"github.com/loremcookie/go-home-pirelay-backend/internal/database"
+	"github.com/loremcookie/go-home-pirelay-backend/internal/passhash"
 	"os"
 	"testing"
 	"time"
@@ -22,29 +24,33 @@ var (
 func TestMain(m *testing.M) {
 	var err error
 
+	//Load test configuration file
+	err = godotenv.Load("../../../config/api/TEST_CONFIG.env")
+	if err != nil {
+		fmt.Printf("Unable to load test config: %s", err)
+		os.Exit(2)
+	}
+
 	//Prepare tests and initialize database
 	//Check is TESTDATA_DIR directory exists
 	//The TESTDATA_DIR directory is used to hold data used in tests
-	if _, err = os.Stat(os.Getenv("TESTDATA_DIR")); err != nil {
-		//When TESTDATA_DIR does not exist then create it
-		if err == os.ErrNotExist {
-			err = os.Chdir(os.Getenv("TESTDATA_DIR"))
-			//If creation of directory fails fail test
-			if err != nil {
-				fmt.Printf("Test directory %s could not be created.", os.Getenv(""))
-				os.Exit(2)
-			}
+	//When TESTDATA_DIR does not exist then create it
+	if _, err = os.Stat(fmt.Sprintf("../../../%s", os.Getenv("TESTDATA_DIR"))); os.IsNotExist(err) {
+		err = os.Mkdir(fmt.Sprintf("../../../%s", os.Getenv("TESTDATA_DIR")), 0755)
+		if err != nil {
+			fmt.Printf("Test directory %s could not be created.", os.Getenv("TESTDATA_DIR"))
+			os.Exit(2)
 		}
 	}
 
 	//Init database package to be used in the model test
 	err = database.Configure(&database.Database{
-		Path:    fmt.Sprintf("%s/TEST_API_DB.db", os.Getenv("TESTDATA_DIR")),
+		Path:    fmt.Sprintf("../../../%s/TEST_API_DB.db", os.Getenv("TESTDATA_DIR")),
 		Timeout: 5 * time.Second,
 	})
 	//If database configuration fails fail test
 	if err != nil {
-		fmt.Println("Unable to initialize database.")
+		fmt.Printf("Unable to initialize database: %s", err)
 		os.Exit(2)
 	}
 
@@ -60,7 +66,7 @@ func TestMain(m *testing.M) {
 	}
 
 	//Remove TESTDATA_DIR directory if unable to remove the directory exit
-	err = os.Remove(os.Getenv("TESTDATA_DIR"))
+	err = os.RemoveAll(fmt.Sprintf("../../../%s", os.Getenv("TESTDATA_DIR")))
 	if err != nil {
 		fmt.Printf("Unable to remove %s directory.", os.Getenv("TESTDATA_DIR"))
 		os.Exit(2)
@@ -151,11 +157,26 @@ func TestDeleteUser(t *testing.T) {
 	if user != nil {
 		t.Error("User must be nil")
 	}
+
+	//Reset database
+	err = database.Reset()
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 //TestValidUser test for the GetUser function
 func TestValidUser(t *testing.T) {
 	var err error
+
+	//Store password to be reset after test
+	orgTestPass := testUser.Password
+
+	//Hash password to be stored in the database
+	testUser.Password, err = passhash.HashString(testUser.Password)
+	if err != nil {
+		t.Error(err)
+	}
 
 	//Make test user
 	err = NewUser(&testUser)
@@ -166,13 +187,16 @@ func TestValidUser(t *testing.T) {
 	//Validate user with data that is valid
 	isValid := ValidUser(&Login{
 		Username: testUser.Username,
-		Password: testUser.Password,
+		Password: orgTestPass,
 	})
 
 	//User must be valid
 	if !isValid {
 		t.Error("Valid user data is marked as not valid")
 	}
+
+	//Reset Password
+	testUser.Password = orgTestPass
 
 	//Reset database
 	err = database.Reset()
