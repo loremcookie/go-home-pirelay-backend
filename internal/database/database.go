@@ -159,7 +159,7 @@ func Reset() error {
 		return err
 	}
 
-	err = db.View(func(tx *bolt.Tx) error {
+	err = db.Update(func(tx *bolt.Tx) error {
 		//Loop through list of buckets to delete them
 		for _, bucket := range buckets {
 			//Delete bucket
