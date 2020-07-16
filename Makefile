@@ -3,7 +3,7 @@ GOMETALINTER := $(GO_BIN)/gometalinter
 
 # Build builds the api and place them in the projects level bin directory
 .PHONY: build
-build:
+build: clean
 	bash ./scripts/build.sh
 
 # Test runs tests on the
