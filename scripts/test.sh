@@ -1,7 +1,4 @@
 #!/bin/bash
 
-# Get packages
-PKGS := $(shell go list ./... | grep -v /vendor)
-
-# Run tests
-go test $(PKGS)
+# Test all package's and its subdirectory
+go test ./...
