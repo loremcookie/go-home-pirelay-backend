@@ -5,7 +5,7 @@ build: clean
 
 # Test runs tests on the
 .PHONY: test
-test: lint
+test:
 	bash ./scripts/test.sh
 
 .PHONY: lint
