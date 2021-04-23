@@ -97,6 +97,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
+1. Add full test coverage
+2. Expand dokumentation
+
 See the [open issues](https://github.com/loremcookie/go-home-pirelay-backend/issues) for a list of proposed features (and known issues).
 
 
